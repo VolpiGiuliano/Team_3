@@ -4,8 +4,10 @@ import requests
 MODEL_NAME = "llama2"
 OLLAMA_URL = "http://ollama:11434"
 
-# Funzione per verificare se il modello è disponibile
 def model_exists(model_name):
+    """Funzione utile per verificare se il modello è disponibile.
+    Se il collegamento con l'Ollama container fallisce la funzione
+    ritorna False e stampa la natura dell'errore"""
     try:
         response = requests.get(f"{OLLAMA_URL}/api/tags")   # chiama l'api di ollama
         if response.status_code == 200:                     #controlla che l'api risponda
@@ -20,6 +22,7 @@ def model_exists(model_name):
 
 # Funzione per generare una risposta
 def generate_response(prompt):
+    """La funzione usa l'input dell'utente e lo manda verso il container di Ollama"""
     data = {
         "model": MODEL_NAME,
         "prompt": prompt,
