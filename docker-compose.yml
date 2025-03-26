@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    container_name: ollama
+
+  app:
+    build: .
+    stdin_open: true
+    tty: true
+    command: bash
+    depends_on:
+      - ollama
+    container_name: ollama_api_py
