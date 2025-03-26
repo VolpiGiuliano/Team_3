@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Comando per avviare l'applicazione
-CMD ["python", "ollama_api.py"]
+CMD ["python", "generazione_dati.py"]
