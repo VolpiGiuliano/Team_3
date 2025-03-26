@@ -1,16 +1,21 @@
+# versione di docker compose
 version: "3.8"
+
+# inizia la definizione dei docker da avviare/creare
 services:
+# crea il docker tramite l'immagine e ne definisce le porte della api
   ollama:
     image: ollama/ollama
     ports:
       - "11434:11434"
     container_name: ollama
 
-  app:
-    build: .
-    stdin_open: true
-    tty: true
-    command: bash
-    depends_on:
+# crea il docker tramite l'immagine creata in locale
+  ollama-api:  # work directory
+    build: .  # crea l'immagione dal dockerfile nella cartella corrente
+    stdin_open: true  # mantiene STDIN standard per interazione terminale
+    tty: true # crea uno speudo terminale
+    command: bash # all'avvio del docker apre la bash
+    depends_on: # il docker dipende da ollama
       - ollama
-    container_name: ollama_api_py
+    container_name: ollama_api
