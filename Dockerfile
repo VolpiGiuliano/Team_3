@@ -2,7 +2,7 @@
 FROM python:3.9
 
 # Imposta la directory di lavoro
-WORKDIR /app
+WORKDIR /ollama-api
 
 # Copia il file requirements.txt e installa le dipendenze
 COPY requirements.txt requirements.txt
