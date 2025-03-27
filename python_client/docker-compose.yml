@@ -1,6 +1,3 @@
-# versione di docker compose
-version: "3.8"
-
 # inizia la definizione dei docker da avviare/creare
 services:
 # crea il docker tramite l'immagine e ne definisce le porte della api
@@ -8,7 +5,7 @@ services:
     image: ollama/ollama
     ports:
       - "11434:11434"
-    volumes:
+    volumes:          # aggiunta di uno spazio dove salvare dati e modelli
       - ollama_data:/root/.ollama
     container_name: ollama
 
@@ -21,20 +18,23 @@ services:
     depends_on:       # il docker dipende da ollama
       - ollama
     #volumes:
-      #- ollama_api_data:/app/log
+      #- ollama_api_data:/ollama-api/log
     container_name: ollama_api
 
-  # webui:
+  # web gui per facilitare debug e interfacciamento con ollama
+  # webgui:
   #   image: ghcr.io/open-webui/open-webui:main
   #   ports:
   #     - "3000:8080"
   #   environment:
-  #     - OLLAMA_BASE_URL=http://ollama-prova:11434
+  #     - OLLAMA_BASE_URL=http://ollama:11434
   #   depends_on:
   #     - ollama
-  #   volumes:
+  #   volumes:              # aggiunta di uno spazio dove salvare dati
   #     - webui_data:/app/backend/data
+  #   container_name: web_gui
 
+# gestione automatica dei volumi tramite docker
 volumes:
   ollama_data:
   webui_data:
