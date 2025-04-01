@@ -1,1 +1,4 @@
-requests
+langchain
+langchain-community # attualmente non usato ma utile per l'uso di tool
+langchain_core
+langchain-ollama
