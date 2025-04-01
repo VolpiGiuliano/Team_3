@@ -10,16 +10,16 @@ services:
     container_name: ollama
 
 # crea il docker tramite l'immagine creata in locale
-  ollama-api:         # work directory
+  ollama-api:         # Alias arbitrario
     build: .          # crea l'immagione dal dockerfile nella cartella corrente
     # stdin_open: true  # mantiene STDIN standard per interazione terminale
     # tty: true         # crea uno speudo terminale
     # command: bash     # all'avvio del docker apre la bash
     depends_on:       # il docker dipende da ollama
       - ollama
-    #volumes:
-      #- ollama_api_data:/ollama-api/log
-    container_name: ollama_api
+    volumes:
+      - agent_data:/app/outputs # cartella dove salva il file di output
+    container_name: agent
 
   # web gui per facilitare debug e interfacciamento con ollama
   # webgui:
@@ -37,4 +37,5 @@ services:
 # gestione automatica dei volumi tramite docker
 volumes:
   ollama_data:
-  webui_data:
+#  webui_data:
+  agent_data:
