@@ -1,0 +1,43 @@
+agent   | 🧠 Risposta generata:
+agent   |
+agent   | Estratto Conto n. 001/2023
+agent   |
+agent   | Codice Fiscale: XXXXXXXXXX
+agent   | Ragione Sociale: [Inserisci la ragione sociale del cliente]
+agent   |
+agent   | Periodo di riferimento: dal 01/01/2023 al 31/12/2023
+agent   |
+agent   | Descrizione dei servizi prestati:
+agent   |
+agent   | * Consulenza in materia di gestione aziendale (€ 5.000,00)
+agent   | * Assistenza per l'elaborazione di documenti finanziari (€ 2.500,00)
+agent   | * Supporto tecnico per la configurazione del sistema di gestione della produzione (€ 3.000,00)
+agent   |
+agent   | Totale dei servizi prestati: € 10.500,00
+agent   |
+agent   | Descrizione delle spese sostenute:
+agent   |
+agent   | * Spese di viaggio e trasferta (€ 1.200,00)
+agent   | * Spese di ufficio e corrispettive (€ 800,00)
+agent   |
+agent   | Totale delle spese sostenute: € 2.000,00
+agent   |
+agent   | Ricavi totali: € 12.500,00
+agent   |
+agent   | Nota: Il presente estratto conto è soggetto a verifica e controllo. Tutto il materiale presentato è proprietà della nostra società e non può essere riprodotta o utilizzata senza il nostro consenso.
+agent   |
+agent   | Data di emissione: 15/02/2023
+agent   | Sede legale: [Inserisci la sede legale della società]
+agent   |
+agent   | Per ulteriore informazione, contatti il nostro ufficio:
+agent   |
+agent   | Tel.: 0123456789
+agent   | Email: [inserisci l'indirizzo email della società]
+agent   |
+agent   | Speriamo di potervi servire presto.
+agent   |
+agent   | [Inserisci il nome e la firma del rappresentante legale o dell'autorizzato]
+agent   |
+agent   | Nota: Il presente estratto conto è stato redatto in conformità con le disposizioni della normativa fiscale italiana.
+agent   |
+agent   | 💾 Output salvato in 'outputs/output.txt'
