@@ -19,8 +19,19 @@ def ollama(input_data):
     llm = init_model()
     return llm.invoke(input_data)
 
+def controller(input_data):
+    llm = init_model()
+    data = input_data.split("\n\n")
+    return llm.invoke(f"Controlla la coerenza di questa tabella {data}")
+
+def evento(input_data):
+    llm = init_model()
+    data = input_data.split("\n\n")
+    return llm.invoke(f"Quale di questi valori si modificherà se succede questo {input}")
+
 def constraints(input_data):
     data = input_data.split("\n\n")
+
     return data[1]
 
 def prompt():
@@ -35,6 +46,7 @@ def salva_output(text, filename="outputs/output.txt"):
 
 def main():
 
+    input(input)
     workflow = Graph()
 
     workflow.add_node("ollama", ollama)
