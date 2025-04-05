@@ -2,10 +2,8 @@ import os           # per il salvataggio nel volume
 import requests     # per il controllo dello stato di ollama
 import numpy as np
 import pandas as pd
-from langchain_core.prompts import PromptTemplate   # per l'uso di promt strutturati
 from langchain_ollama import OllamaLLM              # integrazione ollama con langchain
 from langgraph.graph import Graph, START, END
-from Evento import crea_sottografo_evento  # importa il sottografo evento
 
 OLLAMA_URL = "http://ollama:11434"  # url api di ollama
 MODEL_NAME = "llama3.2"               # nome modello usato
@@ -50,38 +48,16 @@ def constraints(input_data):
     #print(df)
     return {"tabella": df}  # <-- passa come dizionario per il sottografo evento
 
-def prompt():
-    return "Genera una tabella di 5 colonne di lavori: |impiegato|operaio|imprenditore|disoccupato|pensionato| e 10 righe di spese: |alimentari|alcolici|abbigliamento|abitazione|salute|trasporti|comunicazione|ricreazione|istruzione|assicurazione|poliza"
 
-# salva l'output in un file txt
-def salva_output(text, filename="outputs/output.txt"):
-    os.makedirs("outputs", exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(str(text))
-    print(f"\n💾 Output salvato in '{filename}'")
+def crea_sottografo_tabella():
 
-def main():
-    workflow = Graph()
+    tabella_graph = Graph()
 
-    evento_graph = crea_sottografo_evento()
+    tabella_graph.add_node("ollama", ollama)
+    tabella_graph.add_node("constraints", constraints)
 
-    workflow.add_node("ollama", ollama)
-    workflow.add_node("constraints", constraints)
-    workflow.add_node("evento", evento_graph)
+    tabella_graph.add_edge(START, "ollama")
+    tabella_graph.add_edge("ollama", "constraints")
+    tabella_graph.add_edge("constraints", END)
 
-    workflow.add_edge(START, "ollama")
-    workflow.add_edge("ollama", "constraints")
-    workflow.add_edge("constraints", "evento")
-    workflow.add_edge("evento", END)
-
-    app = workflow.compile()
-
-    risposta = app.invoke(prompt())
-
-    print("\n🧠 Risposta generata:\n")
-    print(risposta["tabella"])
-    print(risposta["tabella_modificata"])
-    salva_output(risposta["tabella_modificata"])
-
-if __name__ == "__main__":
-    main()
+    return tabella_graph.compile()
