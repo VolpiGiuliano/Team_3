@@ -21,21 +21,7 @@ services:
       - agent_data:/app/outputs # cartella dove salva il file di output
     container_name: agent
 
-  # web gui per facilitare debug e interfacciamento con ollama
-  # webgui:
-  #   image: ghcr.io/open-webui/open-webui:main
-  #   ports:
-  #     - "3000:8080"
-  #   environment:
-  #     - OLLAMA_BASE_URL=http://ollama:11434
-  #   depends_on:
-  #     - ollama
-  #   volumes:              # aggiunta di uno spazio dove salvare dati
-  #     - webui_data:/app/backend/data
-  #   container_name: web_gui
-
 # gestione automatica dei volumi tramite docker
 volumes:
   ollama_data:
-#  webui_data:
   agent_data:
