@@ -5,3 +5,5 @@ langchain_core
 langchain-ollama
 langgraph
 langchain.tools
+numpy
+pandas
