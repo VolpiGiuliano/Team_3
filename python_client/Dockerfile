@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Comando per avviare l'applicazione
-CMD ["python", "generazione_dati.py"]
+CMD ["python", "principale.py"]

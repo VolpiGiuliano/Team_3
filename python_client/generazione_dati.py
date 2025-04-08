@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 from langchain_core.prompts import PromptTemplate   # per l'uso di promt strutturati
 from langchain_ollama import OllamaLLM              # integrazione ollama con langchain
-from langgraph.graph import Graph, START, END
+
+from langgraph.graph import StateGraph, START, END
 
 OLLAMA_URL = "http://ollama:11434"  # url api di ollama
 MODEL_NAME = "llama3"               # nome modello usato
@@ -22,11 +23,13 @@ def init_model():
     )
 
 # definisce la catena di chiamata che deve effettuare l'agente al modello
-def ollama(input_data):
+def ollama(state):
     llm = init_model()
-    return llm.invoke(prompt())
-
-def constraints(input_data):
+    state["raw"] = llm.invoke(state["prompt"])
+    return state
+  
+def constraints(state):
+    input_data = state["raw"]
     data = input_data.split("\n\n")
     data = data[1].split("\n")
     k=0
@@ -46,32 +49,26 @@ def constraints(input_data):
                 pass
         if hasEl == True:
             k+=1
-    return table
+    state["matrice"] = table
+    return state
 
-def check(input_data):
-    if np.any(input_data):
+def check(state):
+    matrice = state.get("matrice", [])
+    if np.all(matrice != 0):
         return "results"
     else:
         print("Errore, richiamo")
         return "ollama"
 
-def results(input_data):
+def results(state):
     df = pd.DataFrame(table, columns=["Impiegato", "Operaio", "Imprenditore", "Disoccupato", "Pensionato"])
     df.index = ["Alimentari","Alcolici","Abbigliamento","Abitazione","Salute","Trasporti","Comunicazione","Ricreazione","Istruzione","Assicurazione"]
-    return df
+    state["tabella"] = df
+    print(f"tabella generata: \n{state['tabella']}\n")
+    return state
 
-def prompt():
-    return "Genera una tabella di 5 colonne di lavori: |impiegato|operaio|imprenditore|disoccupato|pensionato|altro| e 10 righe di spese: |alimentari|alcolici|abbigliamento|abitazione|salute|trasporti|comunicazione|ricreazione|istruzione|assicurazione|poliza"
-
-# salva l'output in un file txt
-def salva_output(text, filename="outputs/output.txt"):
-    os.makedirs("outputs", exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(str(text))
-    print(f"\n💾 Output salvato in '{filename}'")
-
-def main():
-    workflow = Graph()
+def crea_sottografo_tabella():
+    workflow = StateGraph(dict)
 
     workflow.add_node("ollama", ollama)
     workflow.add_node("constraints", constraints)
@@ -82,13 +79,4 @@ def main():
     workflow.add_conditional_edges("constraints", check)
     workflow.add_edge("results", END)
 
-    app = workflow.compile()
-
-    risposta = app.invoke(prompt())
-
-    print("\n🧠 Risposta generata:\n")
-    print(risposta)
-    salva_output(risposta)
-
-if __name__ == "__main__":
-    main()
+    return workflow.compile()

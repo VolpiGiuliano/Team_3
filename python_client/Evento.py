@@ -1,130 +1,95 @@
-from langgraph.graph import Graph, START, END
+from langgraph.graph import StateGraph, START, END
 from langchain_ollama import ChatOllama
-from langchain.tools import tool
-import os
-import math
-import random
+import pandas as pd
 
-# Configurazione modello
 OLLAMA_URL = "http://ollama:11434"
 MODEL_NAME = "llama3.2"
 
-MAX_TENTATIVI = 3
-MAX_GENERAZIONI = 1
+# Funzione di utilità normale, non decorata come tool
 
-# TOOL: Calcola un'espressione matematica/probabilistica usando 'valore'
-@tool
-def calcola_probabilita(expr: str, valore: float) -> str:
+def nodo_evento(state: dict) -> dict:
+    state["evento"] = "guerra in ucraina"
+    return state
+
+
+
+def moltiplica_per_valore(df: dict, percentuale) -> dict:
     """
-    Valuta un'espressione matematica che usa la variabile 'valore'.
-    Esempi: 'valore * 0.75', 'valore + random.gauss(-200, 50)'
-    Funzioni disponibili: math.*, random.*
+    calcola le percentuali.
     """
     try:
-        safe_globals = {
-            "__builtins__": {},
-            "math": math,
-            "random": random,
-            "valore": valore
-        }
-        result = eval(expr, safe_globals, {})
-        return str(result)
+        df = pd.DataFrame(df)
+        for i in range(10):
+            for j in range(5):
+                df.iat[i, j] += df.iat[i, j] * percentuale[i]/100
+        return df.to_dict()
     except Exception as e:
-        return f"Errore nel calcolo: {e}"
+        return {"errore": str(e)}
 
+# Modello con tool binding (non serve tool in questa fase)
 def init_model():
-    return ChatOllama(model=MODEL_NAME, base_url=OLLAMA_URL).bind_tools([calcola_probabilita])
+    return ChatOllama(
+        model=MODEL_NAME,
+        base_url=OLLAMA_URL,
+        config={"system_message": "non generare testo"}
+    )
 
-# Nodo 1: Inserimento evento
-def nodo_evento(input_data):
-    input_data["evento"] = "crisi economica globale"
-    return input_data
-
-# Nodo 2: Modifica tabella in base all'evento
-def nodo_modifica(input_data):
-    if isinstance(input_data, tuple):
-        _, input_data = input_data  # scarta "ok"/"errore", tieni il dizionario
-
-    input_data["tentativi"] = input_data.get("tentativi", 0) + 1
+# Nodo in cui il modello decide il moltiplicatore da passare al tool
+def nodo_decisione_llm(state: dict) -> dict:
     llm = init_model()
-    tabella = input_data["tabella"]
-    evento = input_data["evento"]
+    df = state.get("tabella")
+    if isinstance(df, pd.DataFrame):
+        df_str = df.to_string()
+    else:
+        df_str = str(df)
+
     prompt = (
-        f"Dati questi dati in formato tabellare: \n{tabella}\n\n"
-        f"E questo evento: '{evento}'\n\n"
-        f"Per ogni cella da modificare per cui servono dei calcoli usa il tool disponibile\n"
+        f"In base a questo {state['evento']} genera delle ipotetiche variazioni percentuali delle seguenti categorie di spesa mensile: alimentari,alcolici,abbigliamento,abitazione,salute,trasporti,comunicazione,ricreazione,istruzione,assicurazione"
+        f"Scrivi solo le variazioni percentuali separate da virgole, nello stesso ordine"
+        f"usa come formato esempio: '-5%, -2%, -10%, 0%, 3%, -7%, 1%, -4%, 2%, -1%'."
+        f"non generare testo."
     )
+
     output = llm.invoke(prompt)
-    response = output.content if hasattr(output, "content") else str(output)
-    input_data["tabella_modificata"] = response
-    return input_data
+    try:
+        contenuto = output.content.strip()
+        
+        percentuali = [float(x.strip().replace("%", "")) for x in contenuto.split(",")]
+        state["percentuali"] = percentuali
+    except:
+        state["errore"] = f"Impossibile interpretare risposta LLM: {output.content}"
+    return state
 
-# Nodo 3: Verifica coerenza (condizionale)
-def nodo_verifica(input_data):
-    if input_data.get("tentativi", 0) >= MAX_TENTATIVI:
-        input_data["verifica"] = "ok (forzato dopo limite tentativi: errore di coerenza ingestibile)"
-        return "ok", input_data
+# Nodo che applica la trasformazione direttamente
+def applica_tool_senza_llm(state: dict) -> dict:
+    percentuali = state.get("percentuali")
+    tabella = state.get("tabella")
 
-    llm = init_model()
-    tabella_modificata = input_data["tabella_modificata"]
-    prompt = f"Controlla la coerenza della seguente tabella modificata. Rispondi solo con 'ok' oppure 'errore':\n{tabella_modificata}"
-    esito_raw = llm.invoke(prompt)
-    esito = esito_raw.content.strip().lower() if hasattr(esito_raw, "content") else str(esito_raw).strip().lower()
-    input_data["verifica"] = esito
-    return ("ok" if "ok" in esito else "errore"), input_data
+    if isinstance(tabella, pd.DataFrame):
+        df_dict = tabella.to_dict()
+    else:
+        df_dict = tabella
 
-# Creazione del sottografo evento con loop su verifica
+    risultato = moltiplica_per_valore(df_dict, percentuali)
+    try:
+        df = pd.DataFrame(risultato)
+        state["tabella_modificata"] = df
+        #print("\n🔄 Tabella aggiornata con moltiplicatore applicato:\n", df)
+    except Exception as e:
+        state["errore"] = str(e)
+
+    return state
+
+# Sottografo
 def crea_sottografo_evento():
-    evento_graph = Graph()
-    evento_graph.add_node("evento", nodo_evento)
-    evento_graph.add_node("modifica", nodo_modifica)
-    evento_graph.add_node("verifica", nodo_verifica)
+    grafo = StateGraph(dict)
+    grafo.add_node("evento", nodo_evento)
+    grafo.add_node("scegli_moltiplicatore", nodo_decisione_llm)
+    grafo.add_node("applica_tool", applica_tool_senza_llm)
 
-    evento_graph.add_edge(START, "evento")
-    evento_graph.add_edge("evento", "modifica")
-    evento_graph.add_edge("modifica", "verifica")
-    evento_graph.add_conditional_edges(
-        "verifica",
-        lambda result: result[0],
-        {
-            "ok": END,
-            "errore": "modifica"
-        }
-    )
+    grafo.add_edge(START, "evento")
+    grafo.add_edge("evento", "scegli_moltiplicatore")
+    grafo.add_edge("scegli_moltiplicatore", "applica_tool")
+    grafo.add_edge("applica_tool", END)
 
-    return evento_graph.compile()
-
-# ESEMPIO DI USO ISOLATO
-if __name__ == "__main__":
-    sottografo = crea_sottografo_evento()
-    os.makedirs("outputs/debug_output", exist_ok=True)
-
-    for i in range(1, (MAX_GENERAZIONI+1)):
-        print(f"\n🔧 Generazione tabella iniziale per input_data {i}:")
-        llm = init_model()
-        prompt_tabella = "Genera una tabella di 4 colonne nel seguente formato: |sesso|età|lavoro|entrate mensili|"
-        grezzo = llm.invoke(prompt_tabella)
-        tabella_generata = "\n".join(
-            [riga for riga in grezzo.content.splitlines() if riga.strip().startswith("|")]
-            if hasattr(grezzo, "content") else
-            [riga for riga in str(grezzo).splitlines() if riga.strip().startswith("|")]
-        )
-
-        print(tabella_generata)
-
-        input_dati = {
-            "tabella": tabella_generata
-        }
-
-        risultato = sottografo.invoke(input_dati)
-
-        if isinstance(risultato, tuple):
-            _, risultato = risultato
-
-        with open(f"outputs/debug_output/output_debug_{i}.txt", "w", encoding="utf-8") as f:
-            f.write("# Debug Output del sottografo evento\n\n")
-            f.write(f"evento:\n{risultato.get('evento', '')}\n\n")
-            f.write(f"tabella_modificata:\n{risultato.get('tabella_modificata', '')}\n")
-
-        with open(f"outputs/debug_output/tabella_generata_{i}.txt", "w", encoding="utf-8") as f:
-            f.write(tabella_generata)
+    return grafo.compile()
