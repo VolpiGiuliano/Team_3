@@ -66,4 +66,4 @@ Abbiamo pensato a una struttura gerarchica multi-agente con un agente managere g
 Il grafo decisionale è ciò che usaremo come base per la definizione del loop decisionale langgraph che dovrà compiere l'agente manager. Esso dovrà comprendere l'input manuale e definire di quali tool avrà bisogno e potrà accedere ad ogni tool contemporaneamente in maniera parallela così da non inficiare la velocità di elaborazione; Aggregherà i risultati e dopo genererà la richiesta iniziale, finito ciò  ci sarà un momento di controllo di adeguatezza dei risultati e la decisione di rifare da capo la generazione o la fuori uscita di essa.
 
 ![Grafo strutturale](grafi/Grafo%20strutturale.png)
-![Grafo decisionale](grafi\Grafo%20decisionale.png)
+![Grafo decisionale](grafi/Grafo%20decisionale.png)
