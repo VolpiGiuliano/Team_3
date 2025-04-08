@@ -8,18 +8,20 @@ MODEL_NAME = "llama3.2"
 # Funzione di utilità normale, non decorata come tool
 
 def nodo_evento(state: dict) -> dict:
-    state["evento"] = "crisi economica globale"
+    state["evento"] = "guerra in ucraina"
     return state
 
 
 
-def moltiplica_per_valore(df: dict, moltiplicatore: float) -> dict:
+def moltiplica_per_valore(df: dict, percentuale) -> dict:
     """
     calcola le percentuali.
     """
     try:
         df = pd.DataFrame(df)
-        df = df * moltiplicatore
+        for i in range(10):
+            for j in range(5):
+                df.iat[i, j] += df.iat[i, j] * percentuale[i]/100
         return df.to_dict()
     except Exception as e:
         return {"errore": str(e)}
@@ -29,6 +31,7 @@ def init_model():
     return ChatOllama(
         model=MODEL_NAME,
         base_url=OLLAMA_URL,
+        config={"system_message": "non generare testo"}
     )
 
 # Nodo in cui il modello decide il moltiplicatore da passare al tool
@@ -41,21 +44,25 @@ def nodo_decisione_llm(state: dict) -> dict:
         df_str = str(df)
 
     prompt = (
-        f"in base a questo {state['evento']} definisci la variazione delle seguenti categorie di spesa mensile: alimentari,alcolici,abbigliamento,abitazione,salute,trasporti,comunicazione,ricreazione,istruzione,assicurazione"
-        f"scrivi solo la variazione percentuale"
+        f"In base a questo {state['evento']} genera delle ipotetiche variazioni percentuali delle seguenti categorie di spesa mensile: alimentari,alcolici,abbigliamento,abitazione,salute,trasporti,comunicazione,ricreazione,istruzione,assicurazione"
+        f"Scrivi solo le variazioni percentuali separate da virgole, nello stesso ordine"
+        f"usa come formato esempio: '-5%, -2%, -10%, 0%, 3%, -7%, 1%, -4%, 2%, -1%'."
+        f"non generare testo."
     )
 
     output = llm.invoke(prompt)
     try:
-        moltiplicatore = float(output.content.strip())
-        state["moltiplicatore"] = moltiplicatore
+        contenuto = output.content.strip()
+        
+        percentuali = [float(x.strip().replace("%", "")) for x in contenuto.split(",")]
+        state["percentuali"] = percentuali
     except:
         state["errore"] = f"Impossibile interpretare risposta LLM: {output.content}"
     return state
 
 # Nodo che applica la trasformazione direttamente
 def applica_tool_senza_llm(state: dict) -> dict:
-    moltiplicatore = state.get("moltiplicatore")
+    percentuali = state.get("percentuali")
     tabella = state.get("tabella")
 
     if isinstance(tabella, pd.DataFrame):
@@ -63,11 +70,11 @@ def applica_tool_senza_llm(state: dict) -> dict:
     else:
         df_dict = tabella
 
-    risultato = moltiplica_per_valore(df=df_dict, moltiplicatore=moltiplicatore)
+    risultato = moltiplica_per_valore(df_dict, percentuali)
     try:
         df = pd.DataFrame(risultato)
-        state["tabella"] = df
-        print("\n🔄 Tabella aggiornata con moltiplicatore applicato:\n", df)
+        state["tabella_modificata"] = df
+        #print("\n🔄 Tabella aggiornata con moltiplicatore applicato:\n", df)
     except Exception as e:
         state["errore"] = str(e)
 
