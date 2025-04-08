@@ -1,28 +1,18 @@
 import os           # per il salvataggio nel volume
 import requests     # per il controllo dello stato di ollama
+import numpy as np
+import pandas as pd
 from langchain_core.prompts import PromptTemplate   # per l'uso di promt strutturati
 from langchain_ollama import OllamaLLM              # integrazione ollama con langchain
+from langgraph.graph import Graph, START, END
 
 OLLAMA_URL = "http://ollama:11434"  # url api di ollama
 MODEL_NAME = "llama3"               # nome modello usato
 
-# 1. Verifica se il modello è installato
-def model_exists(model_name):
-    try:
-        response = requests.get(f"{OLLAMA_URL}/api/tags")
-        response.raise_for_status()
-        models = response.json().get("models", [])
-        return any(m["name"].startswith(model_name) for m in models)
-    except Exception as e:
-        print(f"Errore nella verifica del modello: {e}")
-        return False
-
-# 2. Installa il modello se non presente
-def pull_model(model_name):
-    print(f"📥 Scaricamento modello '{model_name}' da Ollama...")
-    response = requests.post(f"{OLLAMA_URL}/api/pull", json={"name": model_name}, stream=True)
-    for line in response.iter_lines():
-        print(line.decode())
+table = np.zeros((10,5))
+avgJob = [[3357.79, 0.8],[2513.93, 1.1],[4139.97, 2.5],[1920.94, 2.5],[2498.17, 1.0]]
+avgSpe = [[460.72, 2.81],[41.85, 0.45],[109.14, 1.84],[693.39, 5.53],[87.41, 1.69],[335.94, 5.65],[44.32, 0.38],[94.08, 1.49],[27.02, 1.24],[83.85, 3.69]]
+sum = np.sum(avgSpe, axis=0)[0]
 
 # inizializza l'agente
 def init_model():
@@ -31,17 +21,47 @@ def init_model():
         model=MODEL_NAME
     )
 
-# definisce le regole di generazione
-def get_prompt_template():
-    return PromptTemplate(
-        input_variables=["argomento"],  # definizione di variabile di prompt
-        template="Scrivi il seguente documento: {argomento}, tono professionale, lingua italiana."
-    )
-
 # definisce la catena di chiamata che deve effettuare l'agente al modello
-def run_chain(prompt, llm, input_data):
-    chain = prompt | llm
-    return chain.invoke(input_data)
+def ollama(input_data):
+    llm = init_model()
+    return llm.invoke(prompt())
+
+def constraints(input_data):
+    data = input_data.split("\n\n")
+    data = data[1].split("\n")
+    k=0
+    for i in range(len(data)):
+        line = data[i].split("|")
+        hasEl = False
+        l=0
+        for j in range(len(line)):
+            try:
+                if l<5 and k<10:
+                    num=line[j].strip()
+                    num = num.replace("€", "")
+                    table[k][l] = np.random.normal(loc=(float(num) + (avgJob[l][0]*avgSpe[k][0]/sum))/2, scale=avgJob[l][1]+avgSpe[k][1])
+                l+=1
+                hasEl = True
+            except ValueError: 
+                pass
+        if hasEl == True:
+            k+=1
+    return table
+
+def check(input_data):
+    if np.any(input_data):
+        return "results"
+    else:
+        print("Errore, richiamo")
+        return "ollama"
+
+def results(input_data):
+    df = pd.DataFrame(table, columns=["Impiegato", "Operaio", "Imprenditore", "Disoccupato", "Pensionato"])
+    df.index = ["Alimentari","Alcolici","Abbigliamento","Abitazione","Salute","Trasporti","Comunicazione","Ricreazione","Istruzione","Assicurazione"]
+    return df
+
+def prompt():
+    return "Genera una tabella di 5 colonne di lavori: |impiegato|operaio|imprenditore|disoccupato|pensionato|altro| e 10 righe di spese: |alimentari|alcolici|abbigliamento|abitazione|salute|trasporti|comunicazione|ricreazione|istruzione|assicurazione|poliza"
 
 # salva l'output in un file txt
 def salva_output(text, filename="outputs/output.txt"):
@@ -51,14 +71,21 @@ def salva_output(text, filename="outputs/output.txt"):
     print(f"\n💾 Output salvato in '{filename}'")
 
 def main():
-    if not model_exists(MODEL_NAME):
-        pull_model(MODEL_NAME)
+    workflow = Graph()
 
-    llm = init_model()
-    prompt = get_prompt_template()
-    Argomento = "Estratto conto"    # input manuale che può essere sostituito da un inputs dinamico
-    input_data = {"argomento": Argomento}   # sostituisce i l'input alla parola argomento presente nel prompt
-    risposta = run_chain(prompt, llm, input_data)
+    workflow.add_node("ollama", ollama)
+    workflow.add_node("constraints", constraints)
+    workflow.add_node("results", results)
+
+    workflow.add_edge(START, "ollama")
+    workflow.add_edge("ollama", "constraints")
+    workflow.add_conditional_edges("constraints", check)
+    workflow.add_edge("results", END)
+
+    app = workflow.compile()
+
+    risposta = app.invoke(prompt())
+
     print("\n🧠 Risposta generata:\n")
     print(risposta)
     salva_output(risposta)
