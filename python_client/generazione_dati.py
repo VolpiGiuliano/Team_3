@@ -10,7 +10,9 @@ OLLAMA_URL = "http://ollama:11434"  # url api di ollama
 MODEL_NAME = "llama3"               # nome modello usato
 
 table = np.zeros((10,5))
-v = []
+avgJob = [[3357.79, 0.8],[2513.93, 1.1],[4139.97, 2.5],[1920.94, 2.5],[2498.17, 1.0]]
+avgSpe = [[460.72, 2.81],[41.85, 0.45],[109.14, 1.84],[693.39, 5.53],[87.41, 1.69],[335.94, 5.65],[44.32, 0.38],[94.08, 1.49],[27.02, 1.24],[83.85, 3.69]]
+sum = np.sum(avgSpe, axis=0)[0]
 
 # inizializza l'agente
 def init_model():
@@ -22,12 +24,7 @@ def init_model():
 # definisce la catena di chiamata che deve effettuare l'agente al modello
 def ollama(input_data):
     llm = init_model()
-    return llm.invoke(input_data)
-
-def evento(input_data):
-    llm = init_model()
-    data = input_data.split("\n\n")
-    return llm.invoke(f"Quale di questi valori si modificherà se succede questo {input}")
+    return llm.invoke(prompt())
 
 def constraints(input_data):
     data = input_data.split("\n\n")
@@ -42,20 +39,29 @@ def constraints(input_data):
                 if l<5 and k<10:
                     num=line[j].strip()
                     num = num.replace("€", "")
-                    table[k][l] = float(num)
+                    table[k][l] = np.random.normal(loc=(float(num) + (avgJob[l][0]*avgSpe[k][0]/sum))/2, scale=avgJob[l][1]+avgSpe[k][1])
                 l+=1
                 hasEl = True
             except ValueError: 
                 pass
         if hasEl == True:
             k+=1
+    return table
+
+def check(input_data):
+    if np.any(input_data):
+        return "results"
+    else:
+        print("Errore, richiamo")
+        return "ollama"
+
+def results(input_data):
     df = pd.DataFrame(table, columns=["Impiegato", "Operaio", "Imprenditore", "Disoccupato", "Pensionato"])
     df.index = ["Alimentari","Alcolici","Abbigliamento","Abitazione","Salute","Trasporti","Comunicazione","Ricreazione","Istruzione","Assicurazione"]
-    print(df)
     return df
 
 def prompt():
-    return "Genera una tabella di 5 colonne di lavori: |impiegato|operaio|imprenditore|disoccupato|pensionato| e 10 righe di spese: |alimentari|alcolici|abbigliamento|abitazione|salute|trasporti|comunicazione|ricreazione|istruzione|assicurazione|poliza"
+    return "Genera una tabella di 5 colonne di lavori: |impiegato|operaio|imprenditore|disoccupato|pensionato|altro| e 10 righe di spese: |alimentari|alcolici|abbigliamento|abitazione|salute|trasporti|comunicazione|ricreazione|istruzione|assicurazione|poliza"
 
 # salva l'output in un file txt
 def salva_output(text, filename="outputs/output.txt"):
@@ -69,10 +75,12 @@ def main():
 
     workflow.add_node("ollama", ollama)
     workflow.add_node("constraints", constraints)
+    workflow.add_node("results", results)
 
     workflow.add_edge(START, "ollama")
     workflow.add_edge("ollama", "constraints")
-    workflow.add_edge("constraints", END)
+    workflow.add_conditional_edges("constraints", check)
+    workflow.add_edge("results", END)
 
     app = workflow.compile()
 
