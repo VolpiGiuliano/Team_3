@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from langchain_core.prompts import PromptTemplate   # per l'uso di promt strutturati
 from langchain_ollama import OllamaLLM              # integrazione ollama con langchain
+
 from langgraph.graph import StateGraph, START, END
 
 OLLAMA_URL = "http://ollama:11434"  # url api di ollama
@@ -26,7 +27,7 @@ def ollama(state):
     llm = init_model()
     state["raw"] = llm.invoke(state["prompt"])
     return state
-
+  
 def constraints(state):
     input_data = state["raw"]
     data = input_data.split("\n\n")
