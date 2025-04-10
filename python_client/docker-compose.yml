@@ -18,7 +18,7 @@ services:
     depends_on:       # il docker dipende da ollama
       - ollama
     volumes:
-      - agent_data:/app/outputs # cartella dove salva il file di output
+      - ./agent_data:/app/outputs # cartella dove salva il file di output
     container_name: agent
 
 # gestione automatica dei volumi tramite docker
