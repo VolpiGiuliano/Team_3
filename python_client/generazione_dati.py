@@ -4,13 +4,12 @@ import numpy as np
 import pandas as pd
 from langchain_core.prompts import PromptTemplate   # per l'uso di promt strutturati
 from langchain_ollama import OllamaLLM              # integrazione ollama con langchain
-
 from langgraph.graph import StateGraph, START, END
 
 OLLAMA_URL = "http://ollama:11434"  # url api di ollama
 MODEL_NAME = "llama3"               # nome modello usato
 
-table = np.zeros((10,5))
+np.random.seed(seed = None)
 avgJob = [[3357.79, 0.8],[2513.93, 1.1],[4139.97, 2.5],[1920.94, 2.5],[2498.17, 1.0]]
 avgSpe = [[460.72, 2.81],[41.85, 0.45],[109.14, 1.84],[693.39, 5.53],[87.41, 1.69],[335.94, 5.65],[44.32, 0.38],[94.08, 1.49],[27.02, 1.24],[83.85, 3.69]]
 sum = np.sum(avgSpe, axis=0)[0]
@@ -29,6 +28,7 @@ def ollama(state):
     return state
   
 def constraints(state):
+    table = np.zeros((10,5))
     input_data = state["raw"]
     data = input_data.split("\n\n")
     data = data[1].split("\n")
@@ -57,14 +57,13 @@ def check(state):
     if np.all(matrice != 0):
         return "results"
     else:
-        print("Errore, richiamo")
+        #print("Errore, richiamo")
         return "ollama"
 
 def results(state):
-    df = pd.DataFrame(table, columns=["Impiegato", "Operaio", "Imprenditore", "Disoccupato", "Pensionato"])
+    df = pd.DataFrame(state.get("matrice"), columns=["Impiegato", "Operaio", "Imprenditore", "Disoccupato", "Pensionato"])
     df.index = ["Alimentari","Alcolici","Abbigliamento","Abitazione","Salute","Trasporti","Comunicazione","Ricreazione","Istruzione","Assicurazione"]
     state["tabella"] = df
-    print(f"tabella generata: \n{state['tabella']}\n")
     return state
 
 def crea_sottografo_tabella():

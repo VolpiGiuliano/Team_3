@@ -6,13 +6,6 @@ OLLAMA_URL = "http://ollama:11434"
 MODEL_NAME = "llama3.2"
 
 # Funzione di utilità normale, non decorata come tool
-
-def nodo_evento(state: dict) -> dict:
-    state["evento"] = "guerra in ucraina"
-    return state
-
-
-
 def moltiplica_per_valore(df: dict, percentuale) -> dict:
     """
     calcola le percentuali.
@@ -74,7 +67,6 @@ def applica_tool_senza_llm(state: dict) -> dict:
     try:
         df = pd.DataFrame(risultato)
         state["tabella_modificata"] = df
-        #print("\n🔄 Tabella aggiornata con moltiplicatore applicato:\n", df)
     except Exception as e:
         state["errore"] = str(e)
 
@@ -83,12 +75,11 @@ def applica_tool_senza_llm(state: dict) -> dict:
 # Sottografo
 def crea_sottografo_evento():
     grafo = StateGraph(dict)
-    grafo.add_node("evento", nodo_evento)
+
     grafo.add_node("scegli_moltiplicatore", nodo_decisione_llm)
     grafo.add_node("applica_tool", applica_tool_senza_llm)
 
-    grafo.add_edge(START, "evento")
-    grafo.add_edge("evento", "scegli_moltiplicatore")
+    grafo.add_edge(START, "scegli_moltiplicatore")
     grafo.add_edge("scegli_moltiplicatore", "applica_tool")
     grafo.add_edge("applica_tool", END)
 
