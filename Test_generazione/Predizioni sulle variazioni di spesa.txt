@@ -1,0 +1,85 @@
+Aumento del tasso di disoccupazione
+
+| Percentuale di variazione | Motivazione testuale della variazione |
+| --- | --- |
+| 10% | Aumento del prezzo degli alimentari, dovuto alla scarsità di risorse e all'aumento delle esportazioni |
+| 5% | Riduzione dell'offerta di alcolici, a causa della pandemia di COVID-19 che ha ridotto le esportazioni |
+| -8% | Diminuzione del mercato dell'abbigliamento, a causa della crisi economica globale che ha ridotto la domanda di beni di lusso |
+| 12% | Aumento dei costi di costruzione e locazione dell'abitazione, dovuto all'aumento della domanda e alla scarsità delle risorse immobiliari |
+| -5% | Riduzione della spesa pubblica per la salute, a causa della crisi economica e del ridotto reddito statale |
+| 3% | Aumento dei costi di trasporto, dovuto all'aumento della domanda di servizi logistici e alla scarsità delle risorse energetiche |
+| -10% | Diminuzione della spesa per la comunicazione, a causa della crisi economica e del ridotto reddito privato |
+| 8% | Aumento della domanda di servizi di ricreazione, dovuto all'aumento dell'insicurezza economica e alla ricerca di attività rilassanti |
+| -12% | Riduzione della spesa per l'istruzione pubblica, a causa della crisi economica e del ridotto reddito statale |
+| 6% | Aumento dei costi di assicurazione, dovuto all'aumento della domanda di servizi di protezione e alla scarsità delle risorse assicurative |
+
+
+
+Riduzione dell'inflazione
+
+| Percentuale di variazione | Motivazione |
+| --- | --- |
+| 5% | Aumento delle prezzette degli alimentari a causa della crisi agricola, dovuta alla riduzione della produzione e all'aumento dei costi energetici. |
+| -2% | Riduzione dei prezzi degli alcolici a causa dell'effetto "economia di scalo" dopo la riapertura di nuove industrie produttive. |
+| 15% | Aumento dei prezzi dell'abbigliamento a causa della richiesta aumentata da parte delle catene retail, dovuta alla tendenza alle "shopping online". |
+| 8% | Aumento dei prezzi dell'abitazione a causa del aumento della domanda di immobili e dell'aumento dei costi di costruzione. |
+| -3% | Riduzione dei prezzi della salute a causa della concorrenza tra le compagnie assicurative e la richiesta crescente di servizi di prevenzione. |
+| 10% | Aumento dei prezzi dei trasporti a causa dell'aumento dei costi dei carburanti e dell'investimento in nuove tecnologie di efficienza energetica. |
+| -5% | Riduzione dei prezzi della comunicazione a causa della concorrenza tra le compagnie telefoniche e la richiesta crescente di servizi di internet a basso costo. |
+| 12% | Aumento dei prezzi della ricreazione a causa della richiesta aumentata da parte delle catene retail e del turismo estivo. |
+| -1% | Riduzione dei prezzi dell'istruzione a causa della concorrenza tra le istituzioni educative pubbliche e private e la richiesta crescente di servizi formativi online. |
+| 6% | Aumento dei prezzi dell'assicurazione a causa dell'aumento dei costi delle compagnie assicurative e della richiesta crescente di servizi di protezione finanziaria. |
+
+
+
+Crisi idrica causata dalla siccità
+
+| Percentuale di variazione | Motivazione |
+| --- | --- |
+| 5% | Aumento della domanda di alimenti sani e biologici a causa dell'attenzione verso la salute e l'environnement. |
+| -3% | Riduzione delle spese per alcolici dovuta alla crescente consapevolezza degli effetti negativi dell'alcool sulla salute e sulle finanze. |
+| 12% | Crescita del mercato degli abiti e dei capi di abbigliamento di alta qualità a causa della maggiore attenzione verso l'estetica personale e la sostenibilità. |
+| -8% | Riduzione delle spese per l'abitazione dovuta alla crescente consapevolezza dell'impatto ambientale delle scelte immobiliari e alle nuove tecnologie di costruzione sostenibile. |
+| 6% | Aumento della domanda di prodotti e servizi di salute e benessere a causa della crescente consapevolezza della importanza della salute mentale e fisica. |
+| -2% | Riduzione delle spese per i trasporti pubblici dovuta alla maggiore offerta di opzioni di mobilità sostenibile come il ciclismo e la camminata. |
+| 10% | Crescita del mercato della comunicazione digitale a causa della crescente domanda di servizi di streaming e di tecnologie di connessione veloce. |
+| -4% | Riduzione delle spese per i prodotti ricreativi come il cinema, il teatro e l'arte a causa della maggiore offerta di opzioni alternative come la lettura e la socializzazione online. |
+| 8% | Aumento della domanda di servizi educativi e formativi a causa della crescente consapevolezza dell'importanza dell'istruzione continua e della formazione professionale. |
+| -1% | Riduzione delle spese per l'assicurazione dovuta alla maggiore offerta di opzioni di copertura assicurativa alternative come il self-assicuramento e la gestione del rischio a livello individuale. |
+
+
+
+Aumento dei contagiper una malattia infettiva
+
+| Percentuale di variazione | Motivazione testuale della variazione |
+| --- | --- |
+| 15% | Contatti alimentari: riduzione della variazione grazie all'igiene personale e alla preparazione di cibi freschi e sani. |
+| 25% | Uso di alcolici: aumento della variazione a causa dell'alterazione del sistema immunitario causata dall'alcol. |
+| 30% | Abbigliamento: aumento della variazione grazie all'esposizione a personale in buona salute, ma non sempre adeguatamente protetto da maschere e dispositivi di protezione. |
+| 20% | Abitazione: aumento della variazione a causa della presenza di sostanze chimiche o batteri nell'ambiente domestico. |
+| 10% | Salute: riduzione della variazione per la presenza di individui in buona salute, che non contribuiscono alla trasmissione della malattia. |
+| 40% | Trasporti: aumento della variazione a causa dell'esposizione ad altre persone con sintomi simili, o all'uso di veicoli che non vengono frequentemente puliti e disinfettati. |
+| 35% | Comunicazione: aumento della variazione a causa della mancanza di informazioni precise sull'epidemia, o dell'errore nel utilizzo delle maschere o dei dispositivi di protezione. |
+| 45% | Ricerca e intrattenimento (ricreazione): aumento della variazione grazie all'esposizione ad altre persone in buona salute, ma non sempre adeguatamente protte da misure di sicurezza. |
+| 15% | Istruzione: riduzione della variazione per la presenza di personale qualificato e l'adempimento alle norme di igiene e protezione. |
+| 50% | Assicurazione: aumento della variazione a causa della mancanza di un sistema di sicurezza adeguato e dell'insufficiente copertura assicurativa. |
+
+
+
+Incremento dei flussi migratori
+
+| Percentuale di variazione | Motivazione testuale della variazione |
+| --- | --- |
+| 10% | La crescita economica del paese sta portando a un aumento dell'offerta di posti di lavoro nel settore alimentare, incentivando gli immigrati a scegliere questa opzione. |
+| -5% | Le difficoltà logistiche e le restrizioni amministrative sul commercio internazionale stanno riducendo la domanda di prodotti alimentari esportati da altri paesi, influenzando negativamente l'immigrazione nel settore. |
+| 15% | Il boom del turismo in un determinato paese sta stimolando la domanda di servizi e beni legati all'industria dell'alcol, come vini e birre locali, che si stanno rapidamente espandendo. |
+| -8% | Le difficoltà economiche globali stanno riducendo la disponibilità di fondi per investimenti nel settore dell'abbigliamento, limitando l'immigrazione di lavoratori specializzati in questo campo. |
+| 12% | La richiesta crescente di spazi abitativi nelle città grandi e dinamiche sta portando a un aumento della domanda di immobili per residenza, incentivando gli immigrati a scegliere questa opzione. |
+| -6% | Le politiche governative volte a ridurre l'influenza del settore energetico sullo sviluppo economico stanno riducendo la domanda di lavoratori specializzati in questo campo, influenzando negativamente l'immigrazione nel settore della salute. |
+| 8% | La crescita delle tecnologie e dei nuovi modi di comunicazione stanno aumentando la domanda di professionisti specializzati in settori come la logistica e i sistemi informatici, incentivando gli immigrati a scegliere questa opzione. |
+| -4% | Le difficoltà economiche globali stanno riducendo la disponibilità di fondi per investimenti nel settore dei trasporti, limitando l'immigrazione di lavoratori specializzati in questo campo. |
+| 10% | La domanda crescente di servizi di comunicazione e rete sociale sta portando a un aumento della domanda di professionisti specializzati in tecnologia e innovazione, incentivando gli immigrati a scegliere questa opzione. |
+| -3% | Le politiche governative volte a ridurre l'influenza del settore turistico sullo sviluppo economico stanno riducendo la domanda di lavoratori specializzati in questo campo, influenzando negativamente l'immigrazione nel settore della ricreazione. |
+| 12% | La richiesta crescente di servizi di istruzione e formazione sta portando a un aumento della domanda di professionisti specializzati in questo settore, incentivando gli immigrati a scegliere questa opzione. |
+| -2% | Le difficoltà economiche globali stanno riducendo la disponibilità di fondi per investimenti nel settore assicurativo, limitando l'immigrazione di lavoratori specializzati in questo campo. |
+
